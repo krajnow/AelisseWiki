@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Aelisse Wiki</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:14px/1.6 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#101113;color:#e8e9ec;min-height:100vh}button,input{font:inherit}button{cursor:pointer}header{display:flex;align-items:center;gap:16px;padding:17px 30px;border-bottom:1px solid #25272c;position:sticky;top:0;background:#101113;z-index:5}.brand{font-size:20px;font-weight:750;letter-spacing:-.8px;cursor:pointer;color:inherit;background:none;border:0;padding:0}.brand span{color:#777b86;font-weight:400}.search{margin-left:auto;position:relative;width:280px}input{background:#1a1c20;border:1px solid #30333a;border-radius:7px;width:100%;padding:8px 12px;color:#eee;outline:none;font-size:13px}input:focus{border-color:#888eac}.results{position:absolute;z-index:4;top:43px;background:#202227;width:100%;border-radius:8px;overflow:hidden;box-shadow:0 8px 30px #0007}.results:empty{display:none}.results button{display:block;width:100%;border:0;text-align:left;background:transparent;color:#ddd;padding:10px}.results button:hover{background:#30323a}.layout{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100vh - 70px)}aside{border-right:1px solid #25272c;padding:22px 14px;background:#131416}nav{position:sticky;top:90px;max-height:calc(100vh - 100px);overflow:auto}nav button{display:block;width:100%;background:none;border:0;color:#9fa2ac;text-align:left;padding:7px 12px;border-radius:6px;font-size:13px}nav button.active{color:#f0f1f4;background:#26282e;font-weight:600}nav button:hover{background:#202226;color:#fff}main{padding:42px 40px;min-width:0;width:100%;max-width:1000px;margin:0 auto}h1{font-size:38px;line-height:1.12;font-weight:750;letter-spacing:-1.5px;margin:14px 0;color:#f3f3f5}h2{font-size:18px;font-weight:650;letter-spacing:-.35px;margin:26px 0 13px}p{font-size:14px;color:#a1a5af;margin:0 0 18px;line-height:1.8}.hero{padding-bottom:22px;border-bottom:1px solid #282a30}.hero p{max-width:520px}.primary{background:#e3e5eb;border:0;color:#17181b;padding:9px 15px;border-radius:6px;font-weight:650;font-size:13px}.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tile{position:relative;background:#181a1e;border:1px solid #2a2c32;border-radius:8px;padding:19px;text-align:left;color:#e5e6ea;min-height:124px}.tile:hover{background:#202228;border-color:#626773}.tile svg{color:#a5aab9;margin-bottom:10px}.tile b{display:block;font-size:14px;font-weight:650}.tile p{font-size:13px;line-height:1.5;margin:5px 0 0}.arrow{position:absolute;right:13px;top:13px;color:#6c707a}.quick{display:flex;gap:7px;flex-wrap:wrap}.quick button{background:#191b1f;color:#bfc2cd;border:1px solid #2b2d34;border-radius:6px;padding:6px 10px;font-size:12px}.quick button:hover{color:white;border-color:#777}footer{border-top:1px solid #282a30;margin-top:28px;padding-top:15px;color:#898d97;font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}footer a{color:#a0a4af;text-decoration:none;margin-right:9px}.crumb{font-size:12px;color:#9296a1;margin-bottom:18px}.article{min-height:440px}.article ul{color:#b8bbc4;padding-left:20px;font-size:14px}.article li{margin:9px 0}.note{padding:12px;background:#1c1e24;border-left:2px solid #858b9c;font-size:13px;color:#b9bdc9;border-radius:3px}.menu{display:none;border:0;color:#ddd;background:none;font-size:21px;padding:0}button:focus-visible,a:focus-visible{outline:2px solid #a5aab9;outline-offset:3px}
+@media(max-width:650px){.layout{grid-template-columns:1fr}aside{display:none;border-bottom:1px solid #282a30}aside.open{display:block}nav{position:static;max-height:none}.menu{display:block}header{padding:14px;gap:10px}.search{width:140px}main{padding:24px 17px}h1{font-size:30px}.tile{padding:13px}.tile p{font-size:12px}}
+
+/* Compact, native collapsible navigation and unobtrusive scrolling. */
+:root{color-scheme:dark;--header-height:72px;scrollbar-color:#3b3d44 transparent;scrollbar-width:thin}
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+header{height:var(--header-height);flex-shrink:0;padding-block:0}
+.layout{flex:1;min-height:0}
+aside{padding:14px 14px 18px}
+nav{top:calc(var(--header-height) + 14px);max-height:calc(100dvh - var(--header-height) - 32px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#3b3d44 transparent}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#3b3d44;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#60636c}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+.nav-group{margin:4px 0}
+.nav-group summary{display:flex;align-items:center;justify-content:space-between;gap:8px;list-style:none;cursor:pointer;padding:9px 12px;border-radius:6px;color:#9fa2ac;font-size:13px;font-weight:550;user-select:none}
+.nav-group summary::-webkit-details-marker{display:none}
+.nav-group summary:hover{background:#202226;color:#f0f1f4}
+.nav-group summary:focus-visible{outline:2px solid #a5aab9;outline-offset:-2px}
+.nav-group .chevron{flex:none;color:#777b86;transition:transform .15s ease}
+.nav-group[open] .chevron{transform:rotate(90deg)}
+.nav-group[open]>summary{color:#e0e1e6}
+.nav-items{margin:2px 0 5px 12px;padding-left:7px;border-left:1px solid #2c2e34}
+.nav-items button{padding:6px 10px;font-size:13px}
+@media(prefers-reduced-motion:reduce){.nav-group .chevron{transition:none}}
+@media(max-width:650px){:root{--header-height:62px}header{padding-inline:14px}aside{padding:12px 14px}nav{max-height:none;overflow:visible}}
+
+.article a{color:#a9b9e7;text-decoration:underline;text-underline-offset:3px}.article a:hover{color:#e2e7f5}
+
+/* Apple emoji: inline PNGs with a native Unicode fallback. */
+.apple-emoji{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.18em;object-fit:contain}
+.apple-emoji[hidden],.emoji-fallback[hidden]{display:none}
+/* Copyable game commands. */
+.command-section{margin-top:26px;padding-top:17px;border-top:1px solid #282a30}
+.command-heading{font-size:13px;color:#a1a5af;margin:0 0 10px;font-weight:500;letter-spacing:normal}
+.command-buttons{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.command-copy{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px;padding:6px 11px;border:1px solid #30333a;border-radius:6px;background:#202227;color:#e8e9ec;font-size:13px;line-height:1.5}
+.command-copy:hover{background:#292c33;border-color:#626773}
+.command-copy svg{color:#979ba6;flex-shrink:0}
+.command-copy[data-state="success"] svg{color:#a4b5a7}
+.command-copy[data-state="error"]{color:#e0b1b1}
+.command-copy.inline{min-height:0;padding:2px 7px;gap:6px;vertical-align:baseline}
+.copy-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+/* Patron article cards. */
+.patron-cards{display:grid;gap:10px}
+.patron-card{display:flex;align-items:center;gap:16px;padding:16px 18px;background:#181a1e;border:1px solid #2a2c32;border-radius:8px}
+.patron-icon{font-size:28px;line-height:1;flex:0 0 36px;text-align:center}
+.patron-card h3{font-size:14px;font-weight:650;margin:0 0 4px}
+.patron-card p{font-size:13px;margin:0;line-height:1.5}
+.patron-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.patron-fact{background:#181a1e;border:1px solid #2a2c32;border-radius:8px;padding:14px 16px}
+.patron-fact strong{display:block;font-size:21px;line-height:1.4;font-weight:650;color:#e8e9ec}
+.patron-fact > span{display:block;font-size:12px;color:#a1a5af}
+.patron-fact .alliance-cost{white-space:nowrap}
+.patron-costs{border-collapse:collapse;width:100%;font-size:14px}
+.patron-costs th,.patron-costs td{border-bottom:1px solid #282a30;padding:11px 0;text-align:left}
+.patron-costs th{font-weight:500;color:#a1a5af}
+.patron-costs td:last-child{text-align:right;font-weight:600}
+@media(max-width:480px){.patron-card{padding:13px;gap:12px}.patron-fact{padding:12px}.patron-fact strong{font-size:19px}}
+/* Rarity unlock table. */
+.rarity-table{width:100%;border-collapse:separate;border-spacing:0 7px;margin:-7px 0 18px;font-size:14px}
+.rarity-table thead th{font-size:12px;font-weight:500;color:#a1a5af;text-align:left;padding:0 16px 4px}
+.rarity-table thead th:last-child{text-align:right}
+.rarity-table tbody th,.rarity-table tbody td{background:#181a1e;border-top:1px solid #2a2c32;border-bottom:1px solid #2a2c32;padding:12px 16px}
+.rarity-table tbody th{text-align:left;border-left:1px solid #2a2c32;border-radius:7px 0 0 7px;font-weight:550}
+.rarity-table tbody td{text-align:right;white-space:nowrap;color:#a0a4af;border-right:1px solid #2a2c32;border-radius:0 7px 7px 0;font-variant-numeric:tabular-nums}
+.rarity-name{display:flex;align-items:center;gap:12px}
+.rarity-icon{display:inline-flex;align-items:center;justify-content:center;width:26px;flex:0 0 26px;font-size:21px;line-height:1}
+@media(max-width:480px){.rarity-table{font-size:13px}.rarity-table tbody th,.rarity-table tbody td{padding:10px}.rarity-table thead th{padding-inline:10px}.rarity-name{gap:8px}.rarity-icon{font-size:19px;width:24px;flex-basis:24px}}
+/* Character statistics table. */
+.stats-table{width:100%;border-collapse:collapse;margin:0 0 18px;font-size:14px;table-layout:fixed}
+.stats-table th,.stats-table td{text-align:left;vertical-align:top;padding:11px 12px;border-bottom:1px solid #282a30;overflow-wrap:break-word}
+.stats-table thead th{color:#a1a5af;font-size:12px;font-weight:500;background:#181a1e}
+.stats-table th:first-child{width:33%}
+.stats-table tbody th{font-weight:550;color:#e8e9ec}
+.stats-table tbody td{color:#a1a5af}
+@media(max-width:480px){.stats-table{font-size:13px}.stats-table th,.stats-table td{padding:9px 7px}.stats-table th:first-child{width:36%}}
+.battle-steps{color:#b8bbc4;padding-left:22px;font-size:14px}
+/* Command directory: wrap aliases without overflowing narrow screens. */
+.command-directory th:first-child{width:56%}
+.command-directory .command-buttons{gap:5px}
+.command-directory .command-copy{max-width:100%;min-width:0;gap:7px;text-align:left;white-space:normal}
+.command-directory .command-label{min-width:0;overflow-wrap:anywhere}
+@media(max-width:480px){.command-directory th:first-child{width:58%}.command-directory .command-copy{font-size:12px;padding:5px 7px}}
+</style></head><body>
+<header><button class="menu" aria-label="Меню" aria-expanded="false">☰</button><button class="brand" data-page="home">aelisse<span> wiki</span></button><div class="search"><input aria-label="Поиск" placeholder="⌕  Поиск по сайту"><div class="results"></div></div></header>
+<div class="layout"><aside><nav aria-label="Разделы"></nav></aside><main><div class="hero"><h1>Всё о мире Aelisse.</h1><p>Игровые механики, развитие персонажа, снаряжение и всё, что необходимо знать для начала игры.</p><button class="primary" data-page="first">Начать игру →</button></div><h2>Обзор разделов</h2><div class="tiles"></div><h2>Быстрый доступ</h2><div class="quick"><button data-page="forge">Ковка</button><button data-page="anvil">Наковальня</button><button data-page="rest">Отдых</button><button data-page="commands">Все команды →</button></div><footer><span>© Aelisse</span><span><a href="https://t.me/AelisseNews" target="_blank" rel="noopener noreferrer">Новости</a><a href="https://t.me/AelisseChat" target="_blank" rel="noopener noreferrer">Сообщество</a></span></footer></main></div>
+<script>
+const groups=[['Начало игры',[['first','Первые шаги'],['resources','Ресурсы']]],['Кузница',[['forge','Ковка'],['anvil','Наковальня'],['auto','Автоковка'],['rarity','Редкости']]],['Персонаж',[['stats','Характеристики'],['patrons','Покровители']]],['Сообщество',[['alliance','Альянсы'],['battle','Сражения'],['rating','Рейтинги']]],['Достижения',[['ach','Достижения'],['titles','Титулы']]],['Справочник',[['rest','Отдых'],['ref','Реферальная система'],['commands','Все команды']]]];
+const tiles=[['first','Начало игры','Основы и первые шаги.','M4 4h6l2 2 2-2h6v15h-6l-2 2-2-2H4z M12 6v15'],['forge','Кузница','Создание и улучшение экипировки.','m13 5 6 6-3 3-6-6z M13 11l-8 8-2-2 8-8 M15 3l6 6'],['stats','Персонаж','Характеристики и развитие.','M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z'],['alliance','Сообщество','Альянсы, сражения и рейтинги.','M16 21v-3a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v3 M20 21v-3a4 4 0 0 0-3-4 M14 4a4 4 0 0 1 0 8 M10 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],['ach','Достижения','Награды и уникальные титулы.','M7 3h10v7a5 5 0 0 1-10 0z M7 5H3v3a5 5 0 0 0 5 5 M17 5h4v3a5 5 0 0 1-5 5 M12 15v6 M7 21h10'],['commands','Справочник','Все игровые команды.','M5 3h14v18H5z M8 7h8 M8 11h8 M8 15h5']];
+const copyIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 4H6a2 2 0 0 0-2 2v10"/></svg>';
+const checkIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+const escapeHtml = value => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+function commandButton(command, inline = false) {
+    const safe = escapeHtml(command);
+    return '<button type="button" class="command-copy' + (inline ? ' inline' : '') + '" data-command="' + safe + '" aria-label="Скопировать команду ' + safe + '" title="Скопировать команду"><span class="command-label">' + safe + '</span>' + copyIcon + '</button>';
+}
+function commandButtons(commands) {
+    return '<div class="command-buttons">' + commands.map(command => commandButton(command)).join('') + '</div>';
+}
+const articleCommands = {
+    forge: ['Ковать', 'К'],
+    anvil: ['Наковальня'],
+    auto: ['Автоковка'],
+    stats: ['Профиль', 'Инвентарь'],
+    patrons: ['Покровители'],
+    alliance: ['Альянс', 'Ас'],
+    battle: ['Вызов'],
+    ach: ['Достижения', 'Ач'],
+    titles: ['Титулы'],
+    rest: ['Отдых', 'АФК'],
+    ref: ['/ref', 'Реф']
+};
+function commandSection(id) {
+    const commands = articleCommands[id];
+    return commands ? '<section class="command-section"><h2 class="command-heading">' + (commands.length === 1 ? 'Команда' : 'Команды') + '</h2>' + commandButtons(commands) + '</section>' : '';
+}
+const articles={
+first:"<p>Добро пожаловать в мир Aelisse! Куйте снаряжение, улучшайте наковальню и развивайте своего персонажа.</p><h2>Начало игры</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\" style=\"flex-basis:48px;font-size:21px;font-weight:650\">1</span><div><h3>Запуск игры</h3><p>Начните игру с команды <a href=\"https://t.me/AelisseBot?start\" target=\"_blank\" rel=\"noopener noreferrer\">/start</a>.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\" style=\"flex-basis:48px;font-size:21px;font-weight:650\">2</span><div><h3>Создание снаряжения</h3><p>Используйте <a href=\"#forge\">ковку</a>, чтобы получать предметы экипировки.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\" style=\"flex-basis:48px;font-size:21px;font-weight:650\">3</span><div><h3>Развитие персонажа</h3><p>Улучшайте <a href=\"#anvil\">наковальню</a> и увеличивайте <a href=\"#stats\">мощность персонажа</a>.</p></div></div></div><h2>Дальнейшее развитие</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\">🏰</span><div><h3><a href=\"#alliance\">Альянсы</a></h3><p>Объединяйтесь с другими игроками.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">⚔️</span><div><h3><a href=\"#battle\">Сражения</a></h3><p>Сражайтесь с другими игроками.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">🏆</span><div><h3><a href=\"#ach\">Достижения</a></h3><p>Открывайте новые игровые возможности и получайте уникальные достижения.</p></div></div></div>",
+resources:"<p>Игровые ресурсы необходимы для создания снаряжения и развития персонажа.</p><h2>Виды ресурсов</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\">💰</span><div><h3>Монеты</h3><p>Основная игровая валюта. Используется для улучшения <a href=\"#anvil\">наковальни</a>, создания <a href=\"#alliance\">альянсов</a> и развития <a href=\"#patrons\">покровителей</a>.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">🔨</span><div><h3>Попытки</h3><p>Основной ресурс для создания снаряжения. Каждая ковка расходует одну попытку.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">💎</span><div><h3>Алмазы</h3><p>Особая игровая валюта, которую можно получить за выполнение достижений.</p></div></div></div><h2>Как получить ресурсы</h2><table class=\"stats-table\"><thead><tr><th scope=\"col\">Ресурс</th><th scope=\"col\">Источники</th></tr></thead><tbody><tr><th scope=\"row\">💰 Монеты</th><td>Продажа снаряжения, <a href=\"#rest\">отдых</a>, <a href=\"#ach\">достижения</a> и <a href=\"#ref\">приглашение игроков</a>.</td></tr><tr><th scope=\"row\">🔨 Попытки</th><td><a href=\"#rest\">Отдых</a>, <a href=\"#ach\">достижения</a> и <a href=\"#ref\">приглашение игроков</a>.</td></tr><tr><th scope=\"row\">💎 Алмазы</th><td><a href=\"#ach\">Достижения</a>.</td></tr></tbody></table>",
+forge:"<p>Ковка — основной способ получения снаряжения и увеличения мощности персонажа.</p><h2>Стоимость ковки</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong class=\"alliance-cost\">1&nbsp;🔨</strong><span>Попытка ковки</span></div><div class=\"patron-fact\"><strong class=\"alliance-cost\">1 предмет</strong><span>За одну ковку</span></div></div><h2>Полученное снаряжение</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\">🗡️</span><div><h3>Надеть</h3><p>Используйте полученный предмет. Если соответствующий слот экипировки свободен, предмет надевается автоматически.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">💰</span><div><h3>Продать</h3><p>Продайте полученный предмет за монеты.</p></div></div></div><h2>Редкость и характеристики</h2><p><a href=\"#rarity\">Редкость</a> создаваемого снаряжения зависит от уровня <a href=\"#anvil\">наковальни</a>, а его <a href=\"#stats\">характеристики</a> определяются случайным образом.</p>",
+anvil:"<p>Наковальня определяет доступные <a href=\"#rarity\">редкости</a> снаряжения и вероятность их получения. Повышение её уровня позволяет создавать более совершенные предметы.</p><h2>Улучшение наковальни</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\">💰</span><div><h3>Стоимость улучшения</h3><p>Для повышения уровня требуются монеты. На высоких уровнях стоимость улучшения разделяется на несколько взносов.</p></div></div></div><h2>Ключевые уровни</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\" style=\"flex-basis:48px;font-size:21px;font-weight:650\">13</span><div><h3><a href=\"#auto\">Автоковка</a></h3><p>Открывается на 13-м уровне наковальни.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\" style=\"flex-basis:48px;font-size:21px;font-weight:650\">57</span><div><h3><a href=\"#patrons\">Покровители</a></h3><p>Открываются на 57-м уровне наковальни.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\" style=\"flex-basis:48px;font-size:21px;font-weight:650\">100</span><div><h3>Максимальный уровень</h3><p>Предельный уровень развития наковальни.</p></div></div></div>",
+auto:"<p>Автоковка позволяет создавать снаряжение автоматически, без необходимости запускать каждую попытку вручную.</p><h2>Доступ и лимиты</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong class=\"alliance-cost\">13-й уровень</strong><span>Требуемый уровень <a href=\"#anvil\">наковальни</a></span></div><div class=\"patron-fact\"><strong class=\"alliance-cost\">100 ковок</strong><span>Максимум за один запуск</span></div></div><h2>Фильтры</h2><p>Настройте условия поиска необходимого снаряжения:</p><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\">🔱</span><div><h3>Редкость</h3><p>Поиск предметов выбранных <a href=\"#rarity\">редкостей</a>.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">🦴</span><div><h3>Свойства</h3><p>Поиск предметов с интересующими дополнительными <a href=\"#stats\">характеристиками</a>.</p></div></div></div><p style=\"margin-top:16px\">При получении подходящего предмета автоковка приостанавливается, позволяя надеть или продать его.</p><h2>Фарм ресурсов</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\">💰</span><div><h3>Автоковка без фильтров</h3><p>Можно использовать для заработка монет и заполнения свободных слотов экипировки.</p></div></div></div><p style=\"margin-top:16px\">Все выполненные ковки учитываются в достижениях категории <a href=\"#ach\">«Закалка»</a>.</p>",
+rarity:"<p>В Aelisse существует 10 редкостей снаряжения. Новые редкости открываются по мере улучшения <a href=\"#anvil\">наковальни</a>, а вероятность их получения меняется с каждым уровнем.</p><h2>Редкости снаряжения</h2><table class=\"rarity-table\"><thead><tr><th scope=\"col\">Редкость</th><th scope=\"col\">Уровень открытия</th></tr></thead><tbody><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">⚪️</span><span style=\"color:#d9d9de\">Обычный</span></span></th><td>1 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">🟢</span><span style=\"color:#65b980\">Необычный</span></span></th><td>2 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">🔵</span><span style=\"color:#679ce0\">Редкий</span></span></th><td>13 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">🟣</span><span style=\"color:#ab83de\">Эпический</span></span></th><td>24 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">🔴</span><span style=\"color:#e07780\">Мифический</span></span></th><td>35 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">🟡</span><span style=\"color:#dfc66c\">Легендарный</span></span></th><td>46 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">🦇</span><span style=\"color:#a298c9\">Сумеречный</span></span></th><td>57 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">🔱</span><span style=\"color:#e0c080\">Божественный</span></span></th><td>68 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">⚜️</span><span style=\"color:#e5a86c\">Реликвия</span></span></th><td>79 ур.</td></tr><tr><th scope=\"row\"><span class=\"rarity-name\"><span class=\"rarity-icon\">💫</span><span style=\"color:#e3d6f6\">Истинный</span></span></th><td>90 ур.</td></tr></tbody></table><p>По мере развития наковальни некоторые низшие редкости перестают выпадать, уступая место более редкому снаряжению.</p>",
+stats:"<p>Характеристики определяют боевые возможности персонажа и зависят от надетого снаряжения.</p><h2>Основные характеристики</h2><div class=\"patron-cards\"><div class=\"patron-card\"><span class=\"patron-icon\">🦴</span><div><h3>Мощность</h3><p>Суммарная мощность экипировки. Определяет позицию персонажа в рейтинге игроков.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">❤️‍🩹</span><div><h3>Здоровье</h3><p>Количество урона, которое персонаж способен выдержать в сражении.</p></div></div><div class=\"patron-card\"><span class=\"patron-icon\">🗡️</span><div><h3>Урон</h3><p>Основной показатель силы атаки персонажа.</p></div></div></div><h2>Дополнительные характеристики</h2><p>Снаряжение может обладать дополнительными свойствами, влияющими на эффективность персонажа в бою.</p><table class=\"stats-table\"><thead><tr><th scope=\"col\">Характеристика</th><th scope=\"col\">Эффект</th></tr></thead><tbody><tr><th scope=\"row\">Урон</th><td>Увеличивает наносимый урон</td></tr><tr><th scope=\"row\">Здоровье</th><td>Увеличивает запас здоровья</td></tr><tr><th scope=\"row\">Шанс крита</th><td>Повышает вероятность критического удара</td></tr><tr><th scope=\"row\">Крит. урон</th><td>Усиливает критические удары</td></tr><tr><th scope=\"row\">Скорость атаки</th><td>Увеличивает частоту атак</td></tr><tr><th scope=\"row\">Вампиризм</th><td>Восстанавливает здоровье при нанесении урона</td></tr><tr><th scope=\"row\">Регенерация</th><td>Восстанавливает здоровье во время боя</td></tr><tr><th scope=\"row\">Блок</th><td>Позволяет блокировать атаки противника</td></tr><tr><th scope=\"row\">Проб. блока</th><td>Снижает эффективность блока противника</td></tr><tr><th scope=\"row\">Отраж. урона</th><td>Возвращает часть полученного урона противнику</td></tr></tbody></table><p>Дополнительные бонусы также можно получить благодаря <a href=\"#patrons\">покровителям</a>.</p>",
+patrons:'<p>Покровители — древние духи, дарующие дополнительные боевые характеристики. Становятся доступны с 57-го уровня наковальни.</p><h2>Древние духи</h2><div class="patron-cards"><div class="patron-card"><span class="patron-icon">🐦‍🔥</span><div><h3>Феникс</h3><p>Дух пламени и возрождения.</p></div></div><div class="patron-card"><span class="patron-icon">🦇</span><div><h3>Летучая мышь</h3><p>Дух ночи и теней.</p></div></div><div class="patron-card"><span class="patron-icon">🦌</span><div><h3>Лунный олень</h3><p>Дух луны и лесов.</p></div></div></div><h2>Особенности</h2><p>Бонусы покровителей зависят от дополнительных свойств экипировки. Одновременно может быть выбран только один покровитель.</p><div class="patron-facts"><div class="patron-fact"><strong>5 уровней</strong><span>Максимальное развитие</span></div><div class="patron-fact"><strong>7 дней</strong><span>Цикл обновления</span></div></div><h2>Стоимость улучшения</h2><table class="patron-costs"><tbody><tr><th scope="row">Уровень 1 → 2</th><td>17 000💰</td></tr><tr><th scope="row">Уровень 2 → 3</th><td>34 000💰</td></tr><tr><th scope="row">Уровень 3 → 4</th><td>68 000💰</td></tr><tr><th scope="row">Уровень 4 → 5</th><td>136 000💰</td></tr></tbody></table>',
+alliance:"<p>Альянсы позволяют игрокам объединяться, развиваться вместе и соперничать за позиции в рейтинге альянсов.</p><h2>Создание альянса</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong class=\"alliance-cost\">5&nbsp;000&nbsp;💰</strong><span>Стоимость создания</span></div><div class=\"patron-fact\"><strong>30</strong><span>Максимум участников</span></div></div><p style=\"margin-top:16px\">Каждый альянс имеет собственное название и может установить уникальный тег, отображаемый в рейтинге игроков.</p><h2>Иерархия</h2><div class=\"patron-cards\"><div class=\"patron-card\"><div><h3>Глава</h3><p>Создатель альянса, обладающий полным управлением.</p></div></div><div class=\"patron-card\"><div><h3>Заместитель</h3><p>Участник с дополнительными полномочиями по управлению альянсом.</p></div></div><div class=\"patron-card\"><div><h3>Участник</h3><p>Рядовой член альянса.</p></div></div></div><h2>Мощность альянса</h2><p>Мощность альянса складывается из мощности всех его участников и определяет его позицию в <a href=\"#rating\">общем рейтинге</a>.</p><h2>Управление</h2><table class=\"stats-table\"><thead><tr><th scope=\"col\">Команда</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+"<tr><th scope=\"row\">"+commandButton("Нас", true)+"</th><td>Настройки альянса</td></tr>"+"<tr><th scope=\"row\">"+commandButton("Пас", true)+"</th><td>Пригласить игрока</td></tr>"+"<tr><th scope=\"row\">"+commandButton("+зам", true)+"</th><td>Назначить заместителя</td></tr>"+"<tr><th scope=\"row\">"+commandButton("-зам", true)+"</th><td>Снять заместителя</td></tr>"+"<tr><th scope=\"row\">"+commandButton("-ас", true)+"</th><td>Исключить участника</td></tr>"+"<tr><th scope=\"row\">"+commandButton("!вас", true)+"</th><td>Покинуть альянс</td></tr>"+"</tbody></table><p>Команда приглашения используется в ответ на сообщение игрока. Назначение заместителей и исключение участников доступны при наличии соответствующих полномочий.</p>",
+battle:"<p>Испытайте силу своего персонажа в дружеских поединках с другими игроками.</p><h2>Как начать сражение</h2><ol class=\"battle-steps\"><li>Ответьте словом <strong>Вызов</strong> на сообщение соперника в <a href=\"https://t.me/AelisseChat\" target=\"_blank\" rel=\"noopener noreferrer\">игровом чате</a>.</li><li>Дождитесь принятия вызова.</li><li>После принятия сражение пройдёт автоматически.</li></ol><p>Приглашение действительно в течение 5 минут.</p><h2>Боевая система</h2><p>Исход сражения зависит от основных и дополнительных <a href=\"#stats\">характеристик</a> персонажей, а также бонусов <a href=\"#patrons\">покровителей</a>.</p><h2>Статистика сражения</h2><p>После завершения поединка обоим участникам доступна подробная статистика:</p><div class=\"patron-cards\"><div class=\"patron-card\"><div><h3>Урон</h3><p>Статистика нанесённого урона.</p></div></div><div class=\"patron-card\"><div><h3>Лечение</h3><p>Статистика восстановления здоровья.</p></div></div><div class=\"patron-card\"><div><h3>События</h3><p>Подробный ход сражения.</p></div></div></div><h2>Особенности</h2><p>Дружеские поединки не расходуют игровые ресурсы и не влияют на рейтинг. За победу или поражение не предусмотрено наград и штрафов.</p>",
+rating:"<p>Рейтинги позволяют сравнивать достижения в развитии персонажей и альянсов. Позиции определяются по мощности 🦴.</p><h2>👤 Рейтинг игроков</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong>50</strong><span>Лучших игроков</span></div><div class=\"patron-fact\"><strong>10</strong><span>Игроков на странице</span></div></div><p style=\"margin-top:16px\">Игроки располагаются по убыванию <a href=\"#stats\">мощности</a> персонажа. Улучшайте снаряжение, чтобы подниматься в рейтинге.</p>"+commandButtons(["Топ", "Рейтинг"])+"<h2>🏰 Рейтинг альянсов</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong>10</strong><span>Лучших альянсов</span></div><div class=\"patron-fact\"><strong>🦴</strong><span>Общая мощность</span></div></div><p style=\"margin-top:16px\">Позиция <a href=\"#alliance\">альянса</a> определяется суммарной мощностью всех его участников.</p>"+commandButtons(["Рас", "Рейтинг альянсов"])+"<h2>Переключение рейтингов</h2><p>Используйте кнопку 🏰 в рейтинге игроков для перехода к альянсам и кнопку 👤 для возвращения к рейтингу игроков.</p>",
+ach:'<p>Достижения отражают прогресс персонажа в различных направлениях игры. Выполняйте условия достижений, получайте награды и открывайте уникальные <a href="#titles">титулы</a>.</p><h2>Категории достижений</h2><div class="patron-cards"><div class="patron-card"><div class="patron-icon">👥</div><div><h3>Влияние</h3><p>Приглашайте новых игроков по <a href="#ref">реферальной ссылке</a>. Прогресс зависит от количества активированных рефералов.</p></div></div><div class="patron-card"><div class="patron-icon">🔨</div><div><h3>Закалка</h3><p>Создавайте снаряжение с помощью <a href="#forge">ковки</a> и <a href="#auto">автоковки</a>. Прогресс зависит от общего количества выполненных ковок.</p></div></div></div><h2>Прогресс и награды</h2><p>В каждой категории предусмотрено семь достижений. По мере их выполнения можно получить монеты, попытки ковки и алмазы. Последнее достижение каждой категории открывает особый <a href="#titles">титул</a>.</p>',
+titles:'<p>Титулы — особые знаки отличия, которые можно получить за выполнение <a href="#ach">достижений</a>. Выбранный титул отображается в профиле персонажа.</p><h2>Доступные титулы</h2><div class="patron-cards"><div class="patron-fact"><span>👥 Влияние</span><strong>Избранный</strong><span>Активировать 100 рефералов.</span></div><div class="patron-fact"><span>🔨 Закалка</span><strong>Творец</strong><span>Выполнить 50 000 ковок.</span></div></div><h2>Особенности</h2><p>Титулы позволяют подчеркнуть свои достижения и выделиться среди других игроков.</p>',
+rest:"<p>Отдых — способ пассивного получения монет и попыток ковки. Награды накапливаются со временем, даже когда вы не играете.</p><h2>Накопление ресурсов</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong>2 мин. 30 сек.</strong><span>Интервал начисления</span></div><div class=\"patron-fact\"><strong>8 часов</strong><span>Максимальный период накопления</span></div></div><h2>Награда за 8 часов</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong class=\"alliance-cost\">192&nbsp;🔨</strong><span>Попытки ковки</span></div><div class=\"patron-fact\"><strong class=\"alliance-cost\">180&nbsp;💰</strong><span>Монеты</span></div></div><h2>Как собрать награду</h2><ol class=\"battle-steps\"><li>Подпишитесь на <a href=\"https://t.me/AelisseNews\" target=\"_blank\" rel=\"noopener noreferrer\">канал Aelisse</a>.</li><li>Откройте меню отдыха одной из команд ниже.</li><li>Нажмите кнопку сбора награды.</li></ol><p>Сбор доступен не ранее чем через 5 минут. После достижения лимита в 8 часов ресурсы перестают накапливаться до следующего сбора.</p><p>Полученные ресурсы можно использовать для <a href=\"#forge\">ковки</a> и улучшения <a href=\"#anvil\">наковальни</a>.</p>",
+ref:"<p>Приглашайте новых игроков в Aelisse по персональной реферальной ссылке и получайте дополнительные ресурсы.</p><h2>Награда</h2><div class=\"patron-facts\"><div class=\"patron-fact\"><strong class=\"alliance-cost\">250&nbsp;💰</strong><span>Монеты</span></div><div class=\"patron-fact\"><strong class=\"alliance-cost\">50&nbsp;🔨</strong><span>Попытки ковки</span></div></div><p style=\"margin-top:16px\">Приглашённый игрок получает награду при регистрации, а пригласивший — после активации реферала.</p><h2>Условия активации</h2><div class=\"patron-cards\"><div class=\"patron-card\"><div><h3>3-й уровень наковальни</h3><p>Достичь как минимум 3-го уровня.</p></div></div><div class=\"patron-card\"><div><h3>50 ковок</h3><p>Выполнить не менее 50 ковок.</p></div></div><div class=\"patron-card\"><div><h3>6 часов</h3><p>С момента регистрации должно пройти не менее 6 часов.</p></div></div></div><h2>Как пригласить игрока</h2><ol class=\"battle-steps\"><li>Откройте реферальное меню.</li><li>Нажмите «Поделиться ссылкой» и отправьте её новому игроку.</li><li>После выполнения всех условий награда начислится автоматически.</li></ol><h2>Статистика и достижения</h2><p>В реферальном меню отображается количество приглашённых, активированных и ожидающих игроков, а также сумма полученных наград. Список рефералов доступен по кнопке «Приглашённые».</p><p>Активированные рефералы учитываются в категории <a href=\"#ach\">«Влияние»</a>. За её завершение можно получить <a href=\"#titles\">титул «Избранный»</a>.</p>",
+commands:"<p>Справочник игровых команд. Нажмите на нужную команду, чтобы скопировать её. Регистр букв в текстовых командах не имеет значения.</p><p>Для первого запуска откройте <a href=\"https://t.me/AelisseBot?start\" target=\"_blank\" rel=\"noopener noreferrer\">/start</a>.</p>"+
+"<h2>Начало игры</h2><table class=\"stats-table command-directory\"><thead><tr><th scope=\"col\">Команды</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Меню", "Старт", "Начать"])+
+"</th><td>Главное меню</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Настройки", "/settings"])+
+"</th><td>Настройки игры</td></tr>"+
+"</tbody></table>"+
+"<h2>Кузница</h2><table class=\"stats-table command-directory\"><thead><tr><th scope=\"col\">Команды</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Ковать", "К"])+
+"</th><td>Создать снаряжение</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Наковальня"])+
+"</th><td>Улучшение наковальни</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Автоковка"])+
+"</th><td>Настройки и запуск автоковки</td></tr>"+
+"</tbody></table>"+
+"<h2>Персонаж</h2><table class=\"stats-table command-directory\"><thead><tr><th scope=\"col\">Команды</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Профиль", "Аккаунт"])+
+"</th><td>Профиль персонажа</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Инвентарь", "Инв", "И", "/inventory"])+
+"</th><td>Снаряжение персонажа</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Баланс"])+
+"</th><td>Игровые ресурсы</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Ник"])+
+"</th><td>Изменение ника</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Покровители"])+
+"</th><td>Меню покровителей</td></tr>"+
+"</tbody></table>"+
+"<h2>Альянсы</h2><table class=\"stats-table command-directory\"><thead><tr><th scope=\"col\">Команды</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Альянс", "Ас"])+
+"</th><td>Информация об альянсе</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Нас"])+
+"</th><td>Настройки альянса</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Пас"])+
+"</th><td>Пригласить игрока (ответом)</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["+зам"])+
+"</th><td>Назначить заместителя</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["-зам"])+
+"</th><td>Снять заместителя</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["-ас"])+
+"</th><td>Исключить участника</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["!вас"])+
+"</th><td>Покинуть альянс</td></tr>"+
+"</tbody></table>"+
+"<h2>Сражения и рейтинги</h2><table class=\"stats-table command-directory\"><thead><tr><th scope=\"col\">Команды</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Вызов"])+
+"</th><td>Дружеский поединок (ответом в чате)</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Топ", "Рейтинг"])+
+"</th><td>Рейтинг игроков</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Рас", "Рейтинг альянсов", "Рейтинг ас"])+
+"</th><td>Рейтинг альянсов</td></tr>"+
+"</tbody></table>"+
+"<h2>Достижения</h2><table class=\"stats-table command-directory\"><thead><tr><th scope=\"col\">Команды</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Достижения", "Ач"])+
+"</th><td>Прогресс достижений</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Титулы"])+
+"</th><td>Меню титулов</td></tr>"+
+"</tbody></table>"+
+"<h2>Ресурсы и приглашения</h2><table class=\"stats-table command-directory\"><thead><tr><th scope=\"col\">Команды</th><th scope=\"col\">Действие</th></tr></thead><tbody>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Отдых", "АФК"])+
+"</th><td>Накопление и сбор ресурсов</td></tr>"+
+"<tr><th scope=\"row\">"+
+commandButtons(["Реф", "/ref"])+
+"</th><td>Реферальное меню</td></tr>"+
+"</tbody></table>"+
+"<p>Команды управления участниками альянса требуют соответствующих полномочий. Подробнее — в статье <a href=\"#alliance\">«Альянсы»</a>.</p>"};
+const names=Object.fromEntries(groups.flatMap(g=>g[1]));
+const categories=Object.fromEntries(groups.flatMap(([label,items])=>items.map(([id])=>[id,label])));
+const nav = document.querySelector('nav');
+nav.innerHTML = '<button class="active" data-page="home">Главная</button>' + groups.map(([label, items]) =>
+    '<details class="nav-group"><summary>' + label + '<svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></summary><div class="nav-items">' +
+    items.map(([id, name]) => '<button data-page="' + id + '">' + name + '</button>').join('') + '</div></details>'
+).join('');
+document.querySelector('.tiles').innerHTML=tiles.map(([id,t,d,path])=>'<button class="tile" data-page="'+id+'"><span class="arrow">↗</span><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="'+path+'"/></svg><b>'+t+'</b><p>'+d+'</p></button>').join('');
+const main=document.querySelector('main'),home=main.innerHTML,footer=main.querySelector('footer').outerHTML,input=document.querySelector('input'),results=document.querySelector('.results'),aside=document.querySelector('aside'),menu=document.querySelector('.menu');
+
+const emojiCdn = 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple@16.0.0/img/apple/64/';
+const emojiSegmenter = typeof Intl.Segmenter === 'function'
+    ? new Intl.Segmenter(undefined, {granularity: 'grapheme'}) : null;
+const emojiPattern = /\p{Emoji_Presentation}|\p{Extended_Pictographic}\uFE0F|\u20E3/u;
+const emojiFallbackPattern = /(?:\p{Regional_Indicator}{2}|[0-9#*]\uFE0F?\u20E3|\p{Extended_Pictographic}\uFE0F?(?:\p{Emoji_Modifier})?(?:\u200D\p{Extended_Pictographic}\uFE0F?(?:\p{Emoji_Modifier})?)*)/gu;
+const failedEmojiUrls = new Set();
+
+function emojiImage(emoji) {
+    const wrapper = document.createElement('span');
+    wrapper.className = 'emoji-token';
+    const fallback = document.createElement('span');
+    fallback.className = 'emoji-fallback';
+    fallback.textContent = emoji;
+    const image = document.createElement('img');
+    image.className = 'apple-emoji';
+    image.alt = emoji;
+    image.hidden = true;
+    image.decoding = 'async';
+    image.referrerPolicy = 'no-referrer';
+    const normalized = emoji === '⚪️' ? '⚪' : emoji;
+    const toFilename = value => Array.from(value, char =>
+        char.codePointAt(0).toString(16).padStart(4, '0')).join('-') + '.png';
+    const variants = [...new Set([normalized, normalized.replace(/\uFE0F/g, '')])];
+    const urls = variants.map(value => emojiCdn + toFilename(value));
+    let index = 0;
+    function next() {
+        while (index < urls.length && failedEmojiUrls.has(urls[index])) index++;
+        if (index < urls.length) image.src = urls[index++];
+    }
+    image.addEventListener('load', () => {
+        image.hidden = false;
+        fallback.hidden = true;
+    });
+    image.addEventListener('error', () => {
+        failedEmojiUrls.add(image.src);
+        next();
+    });
+    wrapper.append(fallback, image);
+    next();
+    return wrapper;
+}
+
+function renderAppleEmoji(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+            return !node.parentElement?.closest('.emoji-token,script,style,textarea,code,pre,svg')
+                && emojiPattern.test(node.data)
+                ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+        const text = node.data;
+        const segments = emojiSegmenter
+            ? Array.from(emojiSegmenter.segment(text), part => ({value: part.segment, index: part.index}))
+            : Array.from(text.matchAll(emojiFallbackPattern), part => ({value: part[0], index: part.index}));
+        const fragment = document.createDocumentFragment();
+        let offset = 0;
+        for (const {value, index} of segments) {
+            if (!emojiPattern.test(value) || value.includes('\uFE0E')) continue;
+            fragment.append(text.slice(offset, index), emojiImage(value));
+            offset = index + value.length;
+        }
+        if (offset) {
+            fragment.append(text.slice(offset));
+            node.replaceWith(fragment);
+        }
+    }
+}
+
+function render(id){if(!Object.hasOwn(articles,id))id='home';main.innerHTML=id==='home'?home:'<div class="crumb">'+categories[id]+' / '+names[id]+'</div><article class="article"><h1>'+names[id]+'</h1>'+articles[id]+commandSection(id)+'<div class="copy-status" role="status" aria-live="polite"></div></article>'+footer;renderAppleEmoji(main);document.querySelectorAll('nav button').forEach(b=>{const active=b.dataset.page===id;b.classList.toggle('active',active);if(active){b.setAttribute('aria-current','page');const group=b.closest('details');if(group)group.open=true;}else b.removeAttribute('aria-current');});input.value='';results.innerHTML='';aside.classList.remove('open');menu.setAttribute('aria-expanded','false');}
+function navigate(id){if(location.hash==='#'+id)render(id);else location.hash=id;window.scrollTo(0,0);}
+window.addEventListener('hashchange',()=>render(location.hash.slice(1)));render(location.hash.slice(1));
+const copyTimers = new WeakMap();
+function legacyCopy(value) {
+    const focused = document.activeElement;
+    const selection = document.getSelection();
+    const ranges = selection ? Array.from({length: selection.rangeCount}, (_, index) => selection.getRangeAt(index).cloneRange()) : [];
+    const field = document.createElement('textarea');
+    field.value = value;
+    field.readOnly = true;
+    field.style.cssText = 'position:fixed;left:0;top:0;opacity:0;pointer-events:none;font-size:16px';
+    document.body.append(field);
+    try {
+        field.focus({preventScroll:true});
+        field.select();
+        field.setSelectionRange(0, value.length);
+        return document.execCommand('copy');
+    } finally {
+        field.remove();
+        if (focused instanceof HTMLElement) focused.focus({preventScroll:true});
+        if (selection && ranges.length) {
+            selection.removeAllRanges();
+            for (const range of ranges) selection.addRange(range);
+        }
+    }
+}
+async function copyCommand(button) {
+    const command = button.dataset.command;
+    if (!command || button.dataset.state === 'pending') return;
+    clearTimeout(copyTimers.get(button));
+    button.dataset.state = 'pending';
+    let copied = false;
+    try {
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(command);
+            copied = true;
+        }
+    } catch { /* Local files and restricted browsers may deny Clipboard API. */ }
+    if (!copied) {
+        try { copied = legacyCopy(command); } catch { /* Report failure below. */ }
+    }
+    if (!button.isConnected) return;
+    const label = button.querySelector('.command-label');
+    label.textContent = copied ? 'Скопировано' : 'Не удалось';
+    button.dataset.state = copied ? 'success' : 'error';
+    button.querySelector('svg').outerHTML = copied ? checkIcon : copyIcon;
+    const status = main.querySelector('.copy-status');
+    if (status) status.textContent = copied ? 'Скопировано: ' + command : 'Не удалось скопировать команду ' + command;
+    copyTimers.set(button, setTimeout(() => {
+        label.textContent = command;
+        button.querySelector('svg').outerHTML = copyIcon;
+        delete button.dataset.state;
+    }, 1500));
+}
+document.addEventListener('click',e=>{const copy=e.target.closest('[data-command]');if(copy){void copyCommand(copy);return;}const b=e.target.closest('[data-page]');if(b)navigate(b.dataset.page);else if(e.target.closest('.menu'))menu.setAttribute('aria-expanded',String(aside.classList.toggle('open')));else if(!e.target.closest('.search'))results.innerHTML='';});
+input.addEventListener('input',()=>{const q=input.value.trim().toLowerCase();results.innerHTML=q?Object.keys(names).filter(k=>(names[k]+articles[k]).toLowerCase().includes(q)).slice(0,6).map(k=>'<button data-page="'+k+'">'+names[k]+'</button>').join('')||'<div style="padding:10px">Ничего не найдено</div>':'';});
+input.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=results.querySelector('button');if(b)navigate(b.dataset.page);}if(e.key==='Escape')results.innerHTML='';});
+</script></body></html>
